@@ -1,0 +1,49 @@
+<style>
+.panel-offset{
+	margin-top:-5px;
+}
+</style>
+<div id="programas">
+</div>
+<script>
+var home={
+	'init':function(){
+		var programas=[['雷雨',6],['朗读',12],['时评',6]];
+		for (var i=0;i<programas.length;i++){
+			var title=programas[i][0];
+			var objs=[];
+			for (var j=datas.length-1;j>=0;j--){
+				var tags=datas[j].tags.split(';');
+				for (var k=0;k<tags.length;k++)
+					if (tags[k]==title){
+						objs.push(this.create_obj(j));
+						break;
+					}
+				if (objs.length>=programas[i][1]) break;
+			}
+			$('#programas').append(this.create_programa(title,objs));
+		}
+	},
+	'create_programa':function(title,objs){
+		return $('<div>').addClass('programa').append(
+			$('<div>').addClass('panel panel-default').append(
+				$('<div>').addClass('panel-heading').append(
+					$('<span>').addClass('programa-title').text(title),
+					$('<button>').addClass('btn btn-default btn-sm pull-right panel-offset h3').text('更多 >')
+						.attr('pjax','search?tag='+title)
+				),
+				$('<div>').addClass('panel-body').append(objs)
+			)
+		);
+	},
+	'create_obj':function(dataID){
+		return $('<div>').addClass('col-sm-6 col-md-2 col-lg-2').append(
+			$('<div>').addClass('preview').append(
+				$('<img>').addClass('img-thumbnail img-responsive')
+				.attr('src',datas[dataID].url+datas[dataID].vID+'/'+datas[dataID].vID+'-1.webp')
+			),
+			$('<div>').addClass('video-title').append('【'+datas[dataID].vID+'】'+datas[dataID].title)
+		).attr('pjax','video?v='+encodeURI(datas[dataID].vID));
+	}
+}
+</script>

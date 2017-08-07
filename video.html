@@ -1,0 +1,136 @@
+<style>
+#video-title{
+	font-size:28px;
+}
+#vinfo{
+	font-size:22px;
+}
+#preview{
+	display:inline-block;
+	position:relative;
+	width: 490px;
+    height: 280px;
+}
+#preview .progress{
+    position: absolute;
+    left: 7px;
+    top: 266px;
+    width: 473px;
+    height: 5px;
+}
+#preview .progress-bar{
+    -webkit-transition:none;
+	-o-transition:none;
+	transition:none;
+}
+.tags {
+	display:inline-block;
+	margin-right:10px;
+}
+#video-player {
+	width:100%;
+	padding:10px;
+	margin-bottom:30px;
+}
+#load-button{
+    font-size: 26px;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+}
+</style>
+<div class="panel panel-default">
+<div class="panel-heading"><span id="video-title"></span><button pjax="search" class="btn btn-primary pull-right">返回</button></div>
+<div class="panel-body">
+	<div id="video-player" style="display:none;"></div>
+	<div class="col-sm-12 col-md-6 col-lg-6">
+	<div id="preview" class="img-thumbnail img-responsive"
+		onmouseenter="$('#preview-progress').stop();$('#preview-progress').fadeIn(200);"
+		onmouseleave="$('#preview-progress').stop();$('#preview-progress').fadeOut(200);"
+		onmousemove="video.change_progress(event);">
+		<img id="preview-image" src="img/blank.webp">
+		<div id="preview-progress" class="progress" style="display:none">
+			<div id="preview-progress-bar" class="progress-bar progress-bar-success"></div>
+		</div>
+	</div>
+	</div>
+	<div class="col-sm-12 col-md-6 col-lg-6">
+		<div><dl id="vinfo" class="dl-horizontal"></dl></div>
+		<button type="button" id="load-button" class="btn btn-primary btn-block" onclick="video.load();">加载视频</button>
+	</div>
+</div>
+</div>
+<script>
+var video={
+	"data":"",
+	"init":function(){
+		if (typeof($_GET["v"])=="undefined") v=170316; else v=$_GET["v"];
+		for (i=0;i<datas.length;i++) if (datas[i].vID==v) this.data=datas[i];
+		if (this.data=='') {$.pjax({url:'video404',container:'#content'});}
+		
+		$("#video-title").html('【'+this.data.vID+'】'+'<strong>'+this.data.title+'</strong>');
+		
+		var tags=this.data.tags.split(';');
+		var tags_html='';
+		for (i=0;i<tags.length;i++)
+			tags_html+='<span class="tags label label-info">'+tags[i]+'</span>';
+
+		var vinfo=$("#vinfo");
+		vinfo.append($("<dt>").text('视频ID'),$("<dd>").text(this.data.vID));
+		vinfo.append($("<dt>").text('标题/主讲者'),$("<dd>").text(this.data.title));
+		vinfo.append($("<dt>").text('时长(毫秒)'),
+				$("<dd>").text(this.pad(Math.floor(this.data.length/3600),2)
+				+':'+this.pad(Math.floor(this.data.length%3600/60),2)
+				+'.'+this.pad(this.data.length%60,2)));
+		vinfo.append($("<dt>").text('视频大小'),$("<dd>").text(Math.floor(this.data.size/1024/1024*100)/100+'MB'));
+		vinfo.append($("<dt>").text('标签'),$("<dd>").html(tags_html));
+		
+		
+		var images=[];
+		for (var i=1;i<=this.data.img;i++) images.push(this.data.url+this.data.vID+'/'+this.data.vID+'-'+i+'.webp');
+		loadimg(images,null,function(){$("#preview-image").attr("src",video.data.url+video.data.vID+'/'+video.data.vID+'-1.webp');});
+	},
+	"pad":function(){var tbl=[];return function(num,n){var len=n-num.toString().length;if(len<=0)return num;if(!tbl[len])tbl[len]=(new Array(len+1)).join('0');return tbl[len]+num;}}(),
+	"load":function(){
+		$('#video-player').html('<video src="'+this.data.url+this.data.vID+'/'+this.data.vID+'.mp4" controls autoplay width="100%"></video>');
+		$('#video-player').slideDown();
+		$('#load-button').text('已加载');
+		$('#load-button').attr('disabled','disabled');
+		$('#load-button').removeClass('btn-primary').addClass('btn-success');
+	},
+	"change_progress":function(e){
+		var rate=e.layerX/e.srcElement.offsetWidth*100;
+		var interval=100/this.data.img;
+		$("#preview-progress-bar").css('width',rate+'%');
+		$("#preview-image").attr("src",this.data.url+this.data.vID+'/'+this.data.vID+'-'+Math.floor(rate/interval+1)+'.webp');
+	}
+};
+function loadimg(arr,funLoading,funOnLoad,funOnError){
+	var numLoaded=0,
+	numError=0,
+	isObject=Object.prototype.toString.call(arr)==="[object Object]" ? true : false;
+ 
+	var arr=isObject ? arr.get() : arr;
+	for(a in arr){
+		var src=isObject ? $(arr[a]).attr("data-src") : arr[a];
+		preload(src,arr[a]);
+	}
+ 
+	function preload(src,obj){
+		var img=new Image();
+		img.onload=function(){
+			numLoaded++;
+			funLoading && funLoading(numLoaded,arr.length,src,obj);
+			funOnLoad && numLoaded==arr.length && funOnLoad(numError);
+		};
+		img.onerror=function(){
+			numLoaded++;
+			numError++;
+			funOnError && funOnError(numLoaded,arr.length,src,obj);
+		}
+		img.src=src;
+	}
+ 
+}
+</script>

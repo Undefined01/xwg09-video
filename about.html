@@ -1,0 +1,36 @@
+<style>
+.FAQ{
+	font-size:16px;
+}
+</style>
+<div class="panel panel-primary">
+<div class="panel-heading"><span class="h2">关于：贤武阁·视频分站</span></div>
+<div class="panel-body">
+	<h3>Hi~~~，你好</h3>
+	<h3>这里是 <strong> 东华高级中学（生态园）16级09班 · 贤武阁 </strong> 的<strong>视频分站</strong>！如果您想看其他关于我们的信息，请访问我们的<strong><a href="http://www.xwg09.pw">主站</a></strong></h3>
+	<h3>这里有我们<del>各项活动</del>各项语文活动的视频！包括语文课前的小演讲、小时评，课本剧《雷雨》等。</h3>
+	<h3>自3月16日发布第一个视频，已经<strong>收录了<span id="summary-count"></span>个视频</strong>，总时长<strong>超过<span id="summary-hour"></span>小时<span id="summary-minute"></span>分钟</strong>！<small>欢呼吧！↖(0^◇^0)↗</small></h3>
+	<h3>目前视频分站仍在持续开发中，尽量在高二完结（高三咱要一起努力学习╮(╯3╰)╭）</h3>
+	<h3>如果你发现了一些可疑的bug，请与DJ私聊</h3>
+	<h3>参与开发的人员名单（鸣谢）：（暂无？快来一起搞事情<(@^@)/ ）</h3>
+	<div class="separator"></div>
+	<h3>FAQ</h3>
+	<p class="FAQ"><strong>Q ：</strong>我们不是已经有一个<strong><a href="http://www.xwg09.pw">贤武阁主站</a></strong>了吗，为什么还要一个视频分站？</p>
+	<p class="FAQ"><strong>A ：</strong>众所周知，视频是一个很耗流量的东西。各位看视频都需要流量，我们提供视频给大家看当然也需要流量。而且几乎每周都要有5~6个视频需要更新（你懂的），过多的视频在主站索引也不方便，因此额外建立一个视频分站为主站分流，也便于我们管理。</p>
+	<p class="FAQ"><strong>Q ：</strong>视频质量有点差，怎么破~~~ QAQ</p>
+	<p class="FAQ"><strong>A ：</strong>这个……也是没有办法的事情。首先王冬老师录制视频的质量就是这样。不信？不信我也没办法=_=……其次，截至6月22日最后一次更新视频（当然还有雷雨），总视频大小已有19.2GB，平均观看一个5分钟的朗读视频需要300MB的流量。不对视频进行压缩，对于一些网速不是很好的同学压力很大（好吧，其实我们压力也很大>_<|||）。经过DJ团队多次试验后，才选取了一个适中的参数压缩视频。如果有同学表示<del>很壕</del>，很想看原版视频，可以找LH获得无压缩高清视频，或者咱可以私下<del>交易</del>，说不定还能帮你加个<del>小广告</del>友情赞助什么的。</p>
+	<p class="FAQ"><strong>PS：</strong><a href="https://pan.baidu.com/s/1jHEwRie">这儿<sub>（密码: d9mf）</sub></a>有视频分站的所有视频文件，包括原视频文件（mp4格式）、转码后的视频文件（webm格式）和视频截图（webp格式）。（不过真心想要的话还是找LH用硬盘复制吧）</p>
+	<p class="FAQ"><strong>AD：</strong>招收美编，不包吃不包住，年薪也就一万以下吧，<del>有经验人士优先</del> 有经验没经验的统统都可以来，还可以进入开发人员名单哦<(@￣︶￣@)>。</p>
+</div>
+</div>
+<script>
+var about={"init":function(){
+	$("#summary-count").text(datas.length);
+	var total_length=0;
+	for (var i=0;i<datas.length;i++)
+		total_length+=datas[i].length;
+	$("#summary-hour").text(Math.floor(total_length/60/60/60));
+	$("#summary-minute").text(Math.floor(total_length%(60*60*60)/60/60));
+	}
+}
+</script>

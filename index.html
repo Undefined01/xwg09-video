@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>贤武阁·视频分站</title>
+<style>*{margin:0;}</style>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/jquery.pjax.js"></script>
+<script src="js/GET.js"></script>
+<!-- 
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+ -->
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/template.css">
+<script>
+var datas;
+function load_finished()
+{
+	$('a:not([target])').attr('target','_blank');
+	$("#loading").fadeOut(500);
+	eval($_GET["p"]+".init()");
+	$("button[pjax],div[pjax],a[pjax]").attr("onclick","url=$(this).attr('pjax').match(/([^?]+)(.*)/);$.pjax({url:url[1]+'.html'+url[2],container:'#content'});");
+}
+function decode_data(data){
+	var result=[];
+	for (var i=0;i<data.length;i++){
+		var pre_url=data[i][0];
+		var videos=data[i][1];
+		for (var j=0;j<videos.length;j++){
+			result.push({'vID':videos[j][0],'title':videos[j][1],
+				'length':videos[j][2],'size':videos[j][3],'tags':videos[j][4],
+				'img':videos[j][5],'attach':videos[j][6],'url':pre_url});
+		}
+	}
+	return result;
+}
+$(function(){
+	$("#content").bind("pjax:beforeSend",function(){$("#loading").fadeIn(200);});
+	$("#content").bind("pjax:beforeReplace",function(){load_GET();});
+	$("#content").bind("pjax:complete",function(){load_finished();});
+	$("#content").bind("pjax:error",function(){$("#content").html("好像哪里有点不太对劲！");$("#loading").fadeOut(500);});
+	if (typeof($_GET["p"]) == "undefined") window.location="index.html?p=search";
+	p=$_GET["p"];
+	$.getJSON("new.min.json",function(data){
+		datas=decode_data(data);
+		$.get(p+".html",function(data){
+			$("#content").html(data);
+			load_finished();
+		});
+	});
+	
+});
+</script>
+</head>
+<body>
+	<div id="loading">
+		<div id="loading-center">
+			<div id="loading-center-absolute">
+				<div class="loading-object" id="loading-object-four"></div>
+				<div class="loading-object" id="loading-object-three"></div>
+				<div class="loading-object" id="loading-object-two"></div>
+				<div class="loading-object" id="loading-object-one"></div>
+			</div>
+		</div>
+	</div>
+	<nav class="navbar navbar-fixed-top navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" pjax="home">贤武阁·视频分站</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a pjax="home">主页</a></li>
+            <li><a pjax="search">搜索</a></li>
+            <li><a pjax="about">关于</a></li>
+          </ul>
+			<form onsubmit="$.pjax({url:'search.html?key='+this.children[0].value,container:'#content'});return false;" class="navbar-form navbar-right">
+			  <input type="text" class="form-control input-inverse" placeholder="Search">
+			</form>
+        </div>
+      </div>
+    </nav>
+	<div id="content" class="container"></div>
+</body>
+</html>

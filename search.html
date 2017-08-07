@@ -1,0 +1,122 @@
+<style>
+#search {
+	background:white;
+	height:50px;
+	margin-top:50px;
+	padding:10px;
+    border-radius: 8px;
+	box-shadow: 0 0 2px black;
+	-webkit-box-shadow: 0 0 2px black;
+}
+#search:hover {
+	box-shadow: 0 0 5px blue;
+	-webkit-box-shadow: 0 0 5px blue;
+}
+#search-input {
+	border:none;
+	height:30px;
+    width:100%;
+	line-height:30px;
+	font-size:24px;
+	outline:none;
+}
+#result {
+	border: solid 1px rgb(180,180,180);
+	background-color: white;
+	padding: 5px;
+}
+#result table{
+	width:100%;
+}
+.result {
+	height:25px;
+	padding-left: 10px;
+	line-height:27px;
+}
+.result-tags .label {
+	margin-right:10px;
+}
+.result:hover {
+	background-color:rgba(0,0,0,0.1);
+}
+</style>
+<script>
+var search={
+	"title":"搜索",
+	"last_search":"",
+	"init":function(){
+		$("#result").append($("<table>"));
+		$("#result table").append($("<tr>").append($("<td>").attr("id","notfound").text("没有找到相关的视频")));
+		for (var i=0;i<10;i++)
+		{
+			var result=$("<tr>");
+			result.attr("id","result-"+i).addClass("result");
+			result.append($("<td>").attr("id","result-vID-"+i).addClass("result-vID"));
+			result.append($("<td>").attr("id","result-title-"+i).addClass("result-title"));
+			result.append($("<td>").attr("id","result-length-"+i).addClass("result-length"));
+			result.append($("<td>").attr("id","result-tags-"+i).addClass("result-tags"));
+			result.attr("onmousedown","$.pjax({url:'video.html?v='+$(this).attr(\"href\"),container:'#content'})");
+			$("#result table").append(result);
+			result=null;
+		}
+		
+		$("#result").hide();
+		$(".result").hide();
+		$("#notfound").hide();
+		
+		console.log($_GET);
+		if (typeof($_GET["tag"])!="undefined"){
+			$("#search-input").val(decodeURI($_GET["tag"]));
+			this.search();
+		}
+	},
+	"pad":function(){var tbl=[];return function(num,n){var len=n-num.toString().length;if(len<=0)return num;if(!tbl[len])tbl[len]=(new Array(len+1)).join('0');return tbl[len]+num;}}(),
+	"search":function(){
+		if ($("#search-input").val()=="") {$("#result").hide();return;}
+		if ($("#search-input").val()==this.last_search) {$("#result").show();return;}
+		
+		var search_index=['vID','title','tags'];
+		var result=new Array();
+		var key=$("#search-input").val();
+		
+		this.last_search=key;
+		for (var i=datas.length-1;i>=0;i--)
+		{
+			for (var j=0;j<search_index.length;j++)
+				if (datas[i][search_index[j]].toString().indexOf(key)!=-1)
+				{result.push(datas[i]);break;}
+		}
+		
+		$("#result").show();
+		if (result.length==0) $("#notfound").show();
+		else $("#notfound").hide();
+		for (var i=0;i<result.length;i++)
+		{
+			$("#result-"+i).show();
+			$("#result-vID-"+i).addClass("hidden-xs").text("【"+result[i].vID+"】");
+			$("#result-title-"+i).text(result[i].title);
+			$("#result-length-"+i).addClass("hidden-xs").text(this.pad(Math.floor(result[i].length/3600),2)
+				+':'+this.pad(Math.floor(result[i].length%3600/60),2));
+			
+			var tags=result[i].tags.split(';');
+			var tags_html='';
+			for (var j=0;j<tags.length;j++)
+				tags_html+='<span class="label label-info">'+tags[j]+'</span>';
+			$("#result-tags-"+i).html(tags_html);
+				
+			$("#result-"+i).attr("href",result[i].vID);
+		}
+		for (var i=result.length;i<10;i++)
+			$("#result-"+i).hide();
+	}
+};
+
+
+</script>
+<div class="col-lg-10 col-lg-offset-1">
+	<div id="search">
+		<input type="text" id="search-input" maxlength="20" placeholder="您想要查找什么视频？" onfocus="search.search()" onblur="$('#result').hide()" onkeyup="search.search()"/>
+	</div>
+	<div id="result" style="display:none;">
+	</div>
+</div>
