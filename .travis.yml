@@ -1,0 +1,41 @@
+language: node_js
+node_js: stable
+branches:
+  only:
+    - master
+
+sudo: false
+
+cache:
+  directories:
+    - node_modules
+
+before_install:
+  - du -h -d 2 .
+
+install:
+  - npm install
+
+before_script:
+  - du -h -d 2 .
+
+script:
+  - node node_modules/hexo/bin/hexo deploy
+
+after_success:
+  - cd public
+#  - mv static/README.md .
+  - du -h -d 2 .
+  - du -h -d 2 . > sizeinfo.txt
+  - du -d 100 . > sizeinfo-detailed.txt
+  - git init
+  - git config user.name "Undefined01-Travis"
+  - git config user.email "amoscr@163.com"
+  - git add .
+  - git commit -m "Auto Built by Travis-CI    ——Undefined01"
+  - git push --force "https://${Github_Token}@${Repo_Path}" master:${Deploy_Branch}
+
+env:
+ global:
+   - Repo_Path: github.com/Undefined01/xwg09-video.git
+   - Deploy_Branch: build
