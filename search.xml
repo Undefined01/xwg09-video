@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[【1706204】雷雨·导演说戏：sd]]></title>
+    <url>%2F2017%2F06%2F19%2F%E3%80%901706203%E3%80%91%E9%9B%B7%E9%9B%A8%2F</url>
+    <content type="text"><![CDATA[视频ID1706204 标题/主讲者雷雨·导演说戏：谢思敏 时长(毫秒)06:01.37 视频大小38.39MB 备注一切正常！ 加载视频 delete in_post_page function setFancyBox (node, src) { node.setAttribute('href', src) node.firstElementChild.setAttribute('src', src) } function video_init (node, data) { let root = video_get(node) if (typeof root !== 'undefined' && typeof root.video ==='undefined') setTimeout(function (root, data) { root.video = { data: data, player: root.children[0], preview: root.children[1].firstElementChild, preview_img: root.children[1].firstElementChild.firstElementChild, preview_bar: root.children[1].firstElementChild.lastElementChild, preview_bar_p: root.children[1].firstElementChild.lastElementChild.firstElementChild, detail: root.children[2], loadbtn: root.children[2].getElementsByClassName('btn load-btn')[0] } setFancyBox(root.video.preview_img, root.video.data[5] + root.video.data[0] + '/' + root.video.data[0] + '-1.webp') if (typeof in_post_page !== 'undefined') { root.video.loadbtn.removeAttribute('href') root.video.loadbtn.setAttribute('onclick', 'loadvideo(video_get(this))') } console.log('done') }.bind(null, root, data), 300) } function video_get (node) { let now = node while (now && now.classList.value !== "container post-container-box") now = now.parentElement return now } function change_progress (node, e) { let rate = e.layerX / e.srcElement.offsetWidth * 100 let interval = 100 / node.video.data[6] node.video.preview_bar_p.style.width = rate + '%' setFancyBox(node.video.preview_img, node.video.data[5] + node.video.data[0] + '/' + node.video.data[0] + '-' + Math.floor(rate / interval + 1) + '.webp'); } var in_post_page = null function loadvideo(node) { node.video.player.firstElementChild.setAttribute('src', node.video.data[5] + node.video.data[0] + '/' + node.video.data[0] + '.mp4') $(node.video.player).slideDown('slow') }]]></content>
+      <categories>
+        <category>语文</category>
+        <category>雷雨</category>
+        <category>导演说戏</category>
+      </categories>
+      <tags>
+        <tag>语文</tag>
+        <tag>雷雨</tag>
+        <tag>导演说戏</tag>
+      </tags>
+  </entry>
+</search>
